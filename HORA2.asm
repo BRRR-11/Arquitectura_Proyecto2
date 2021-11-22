@@ -1,3 +1,4 @@
+;Daniel Barrientos Barrantes
 
 DATOS SEGMENT
 	
@@ -19,13 +20,13 @@ DATOS SEGMENT
 	aux2 DB 0
 	aux5 DB 1
 	aux6 DB 2
-	
+;SUMA	
 DATOS ENDS
 
 PILA SEGMENT STACK
         DB      1024 DUP(0)
 PILA ENDS
-
+;SUMA
 CODIGO SEGMENT
 PROYECTO PROC FAR
 ASSUME CS:CODIGO,DS:DATOS,SS:PILA,ES:DATOS ;Poner siempre
@@ -39,15 +40,15 @@ ASSUME CS:CODIGO,DS:DATOS,SS:PILA,ES:DATOS ;Poner siempre
         MOV     AX,PILA
         MOV     SS,AX
         
-        LEA     DX,solicitud1    
-        CALL    PRINT             ;Imprime el mensaje para solicitar el segundo numero de la hora 
+        LEA     DX,solicitud1     ;Solicita el primer numero de la hora
+        CALL    PRINT             ;Imprime el mensaje para solicitar el primer numero de la hora 
         CALL    READ              ;INPUT de una tecla
-		
-		
+			
         SUB     AL,48             ;Convierte el numero a Hexadecimal
         MOV     CH,AL		  ;HIGH izquierda
+	
 		
-	LEA     DX,solicitud2    
+	LEA     DX,solicitud2     ;;Solicita el segundo numero de la hora
         CALL    PRINT             ;Imprime el mensaje para solicitar el segundo numero de la hora 
         CALL    READ              ;INPUT de una tecla
 		
@@ -62,29 +63,29 @@ ASSUME CS:CODIGO,DS:DATOS,SS:PILA,ES:DATOS ;Poner siempre
         CMP CH,AH
 	JE COM1
 	JMP COM4
-;CODIGO
+
 ;VERIFICA SI ES MENOR QUE 9 PARA SABER SI ESTA EN LA ZONA AMARILLA TODAVIA 
 COM1:
         MOV AL,aux1
         CMP CL,AL
-	JB ZONA_VERDE
-        JMP ZONA_AMARILLA2
+	JB ZONA_VERDE      ;if below
+        JMP ZONA_AMARILLA2 ;else
         
         
 ;VERIFICA QUE SEA MENOR QUE 8 PARA SABER SI SE ENCUENTRA EN LA ZONA ROJA 
 COM2:
         MOV AL,aux4
         CMP CL,AL
-        JBE ZONA_ROJA
-        JMP ZONA_LIBRE         
+        JBE ZONA_ROJA  ;if below or equal
+        JMP ZONA_LIBRE ;else        
 	
 	
 ;Ve la parte LOW buscando si es menor que 8 si es asi salta a la ZONA_VERDE sino salta a la ZONA_AMARILLA2		
 COM3:	
         MOV AL,aux3
         CMP CL,AL
-        JBE ZONA_AMARILLA
-        JMP COM2	
+        JBE ZONA_AMARILLA ;if below or equal
+        JMP COM2	  ;else
       
 	
 	
@@ -92,16 +93,16 @@ COM3:
 COM4:
 	MOV AH,aux5
         CMP CH,AH	
-	JE COM5
-	JMP ZONA_LIBRE
+	JE COM5        ;Equal
+	JMP ZONA_LIBRE ;else
 	
 
 ;Ve la parte LOW buscando si es menor que 2 si es asi salta a la ZONA_AMARILLA sino salta a la comparacion 2
 COM5:
 	MOV AL,aux6
         CMP CL,AL	
-	JB ZONA_AMARILLA
-	JMP COM2		
+	JB ZONA_AMARILLA ;if below
+	JMP COM2	 ;else	
 	
 		
 
@@ -123,7 +124,7 @@ ZONA_AMARILLA:
 
 ZONA_AMARILLA2:     
         MOV AH, 09H;Linea para poder imprimir
-        JMP COM3   ;Salta a la comparacion 4
+        JMP COM3   ;Salta a la comparacion 3
         INT 21h
 	RET
 
@@ -145,7 +146,7 @@ ZONA_LIBRE:
 
 
 ;TERMINA 
-		
+;SUMA		
         LEA     DX,FINAL       ;LEO LA CADENA FINAL
         CALL    PRINT          ;LA SACO POR PANTALLA
         MOV     AL,BL          ;GUARDO EL FINALTADO EN AL	
@@ -167,7 +168,7 @@ ZONA_LIBRE:
 PROYECTO ENDP
 
 
-
+;SUMA
 READ	PROC                   ;Lee la tecla digitadda por el usuario
         MOV     AH,01H         
         INT     21H            
